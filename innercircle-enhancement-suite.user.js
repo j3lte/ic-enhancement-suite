@@ -102,6 +102,7 @@ function ic_FunctionWrapper() {
         'body.night .widget, body.night .hotposts_container { color: #FFF; }',
         'body.night .free_action { color: #151415; }',
         'body.night .answer-label, body.night #answers-element label { background-color: #302E31; color: #FFF; }',
+        'body.night #answers-element label.answer-common { background-color: #0099B0; }',
         'body.night .message, body.night .message_send, body.night .message_list, body.night .ui-dialog .ui-dialog-content, body.night .ui-tabs .ui-tabs-panel { background-color: #242124; }',
         'body.night .panel-box { background-color: #302E31; }',
         'body.night .double_user, body.night .single_user { background-color: #242124; }',

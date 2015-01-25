@@ -1,6 +1,6 @@
 # InnerCircle Enhancement Suite
 
-This userscript create enhancements for [InnerCircle](https://www.theinnercircle.co/). This repository is hooked up to the GreaseFork website.
+This userscript create enhancements for [InnerCircle](https://www.theinnercircle.co/). This repository is hooked up to the [GreaseFork website](https://greasyfork.org/nl/scripts/7700-innercircle-enhancement-suite).
 
 ## Features
 

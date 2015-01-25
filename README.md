@@ -6,6 +6,7 @@ This userscript create enhancements for [InnerCircle](https://www.theinnercircle
 
  * Remove the top question block
  * Hide the matches block when there are no matches to be found
+ * Hide invite form
  * Open members in a new tab
  * Load members on hovering over the user-link
  * Night mode

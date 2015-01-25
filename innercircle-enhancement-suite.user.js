@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.2.4
+// @version      0.2.5
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @match        https://www.theinnercircle.co/*
@@ -12,7 +12,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = "0.2.4";
+    var version = "0.2.5";
 
     // Variables
     var win = window;
@@ -112,6 +112,7 @@ function ic_FunctionWrapper() {
         'body.night .map-users .double_user:nth-child(4n), body.night .map-users .double_user:nth-child(4n+3) { background-color: #343034; }',
         'body.night .accordeon .ui-widget-content { border: 1px #151415 solid; background-color: #302E31; }',
         'body.night input[type=text], body.night input[type=password], body.night textarea { background-color: #302E31; color: #FFF; }',
+        'body.night .activity_widget, body.night .circle_messages_widget, body.night .circle_activity_widget { background: #302E31!important; }'
     ].join('\n');
 
     if (typeof GM_addStyle != "undefined") {

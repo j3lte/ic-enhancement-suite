@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.2.7
+// @version      0.2.8
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @match        https://www.theinnercircle.co/*
@@ -12,7 +12,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = "0.2.7";
+    var version = "0.2.8";
 
     // Variables
     var win = window;
@@ -32,17 +32,19 @@ function ic_FunctionWrapper() {
         version : version,
         hideQuestionBlock : false,
         hideEmptyMatches : false,
+        hideWelcomeForm : false,
         hideInviteForm : false,
         loadMemberOnHover : false,
-        openInNew : true,
+        openInNew : false,
         nightMode : false
     };
     var opts = defaults;
 
     var optionLabels = [
-        { identifier: 'option_hide_question', optionKey: 'hideQuestionBlock', label: 'Hide top question block' },
-        { identifier: 'option_hide_empty', optionKey: 'hideEmptyMatches', label: 'Hide matches widget when there are no matches' },
-        { identifier: 'option_hide_invite', optionKey: 'hideInviteForm', label: 'Hide invite form' },
+        { identifier: 'option_hide_question', optionKey: 'hideQuestionBlock', label: 'Hide top question block (top middle)' },
+        { identifier: 'option_hide_empty', optionKey: 'hideEmptyMatches', label: 'Hide matches widget when there are no matches (right)' },
+        { identifier: 'option_hide_welcome', optionKey: 'hideWelcomeForm', label:'Hide welcome form (top left)' },
+        { identifier: 'option_hide_invite', optionKey: 'hideInviteForm', label: 'Hide invite form (right)' },
         { identifier: 'option_load_hover', optionKey: 'loadMemberOnHover', label: 'Load members on hover (beta)' },
         { identifier: 'option_open_in_new', optionKey: 'openInNew', label: 'Open member links in a new window/tab' },
         { identifier: 'option_night_mode', optionKey: 'nightMode', label: 'Night mode' }
@@ -324,6 +326,10 @@ function ic_FunctionWrapper() {
     // Remove nearby question block
     if (opts.hideQuestionBlock) {
         $ic('.nearby-block.question').css('display', 'none');
+    }
+
+    if (opts.hideWelcomeForm) {
+        $ic('.widget.tutorial-welcome').css('display', 'none');
     }
 
     // Remove nearby question block

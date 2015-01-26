@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.2.9
+// @version      0.3.0
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
@@ -15,7 +15,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = "0.2.9";
+    var version = "0.3.0";
 
     // Variables
     var win = window;
@@ -348,7 +348,7 @@ function ic_FunctionWrapper() {
         ev = event;
         if ($ic(this).attr('src') && $ic(this).parent().find('.google-link').length === 0) {
             var href = $ic(this).attr('src');
-            var link = $ic('<a class="google-link" href="http://www.google.com.hk/searchbyimage?image_url=' + encodeURIComponent(href) +'" target="_blank">Search with google</a>');
+            var link = $ic('<a class="google-link" href="http://www.google.com/searchbyimage?image_url=' + encodeURIComponent(href) +'" target="_blank">Search with google</a>');
             $ic(this).parent().append(link);
         }
     });

@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.3.0
+// @version      0.3.1
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
@@ -15,7 +15,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = "0.3.0";
+    var version = "0.3.1";
 
     // Variables
     var win = window;
@@ -182,7 +182,7 @@ function ic_FunctionWrapper() {
             $ic(this).attr('src',nightmode_img.ignore_off);
         });
         // ignore off is dynamically added. Not working yet
-    };
+    }
 
     // $membox is used for the downloaded content
     var $memBox = $ic('<div />');

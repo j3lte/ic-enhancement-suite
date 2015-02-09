@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.3.2
+// @version      0.3.3
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
@@ -15,7 +15,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = "0.3.2";
+    var version = "0.3.3";
 
     // Variables
     var win = window;
@@ -30,6 +30,31 @@ function ic_FunctionWrapper() {
             log : function(){}
         };
     }
+
+    function ICES (win, $) {
+        this.version = "0.3.2";
+        this.defaults = {
+            hideQuestionBlock : false,
+            hideEmptyMatches : false,
+            hideWelcomeForm : false,
+            hideInviteForm : false,
+            loadMemberOnHover : false,
+            openInNew : false,
+            nightMode : false
+        };
+        this.opts = defaults;
+        this.win = win;
+        this.$ = $;
+
+        this.init();
+    }
+
+    ICES.prototype.init = function(){};
+    ICES.prototype.getSettings = function(){};
+    ICES.prototype.saveSettings = function(){};
+    ICES.prototype.switchNightMode = function(){};
+
+    win.ICES = new ICES(win, $ic);
 
     var defaults = {
         version : version,
@@ -118,7 +143,8 @@ function ic_FunctionWrapper() {
         'body.night .accordeon .ui-widget-content { border: 1px #151415 solid; background-color: #302E31; }',
         'body.night input[type=text], body.night input[type=password], body.night textarea { background-color: #302E31; color: #FFF; }',
         'body.night .activity_widget, body.night .circle_messages_widget, body.night .circle_activity_widget { background: #302E31!important; }',
-        'body.night .path_arrow { background-image: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAoCAYAAADHVmuAAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFhsiWzBgQwAAAIBJREFUOMvt1LERgzAMQNEvLj1MEhsmYISMyghMgGRPkGyQTOBUucvlCKiAzip1T5JVyFJKwRMNzqiwwoOgZTXL2okIIrLZMQCzpqXzjA7AXdMSPW9sgdmyRs8yLTB54Au47cEHMMZrb5/EZQUlYOzD8Pw+5eYf+q2W+gFUeD58Ax+PI0CbsNsrAAAAAElFTkSuQmCC\') }'
+        'body.night .path_arrow { background-image: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAoCAYAAADHVmuAAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFhsiWzBgQwAAAIBJREFUOMvt1LERgzAMQNEvLj1MEhsmYISMyghMgGRPkGyQTOBUucvlCKiAzip1T5JVyFJKwRMNzqiwwoOgZTXL2okIIrLZMQCzpqXzjA7AXdMSPW9sgdmyRs8yLTB54Au47cEHMMZrb5/EZQUlYOzD8Pw+5eYf+q2W+gFUeD58Ax+PI0CbsNsrAAAAAElFTkSuQmCC\') }',
+        'body.night .fancybox-skin { background: #363636; }'
     ].join('\n');
 
     // Nightmode images

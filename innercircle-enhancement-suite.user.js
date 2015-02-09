@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.3.3
+// @version      0.3.4
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
@@ -15,7 +15,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = "0.3.3";
+    var version = "0.3.4";
 
     // Variables
     var win = window;
@@ -144,7 +144,9 @@ function ic_FunctionWrapper() {
         'body.night input[type=text], body.night input[type=password], body.night textarea { background-color: #302E31; color: #FFF; }',
         'body.night .activity_widget, body.night .circle_messages_widget, body.night .circle_activity_widget { background: #302E31!important; }',
         'body.night .path_arrow { background-image: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAoCAYAAADHVmuAAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFhsiWzBgQwAAAIBJREFUOMvt1LERgzAMQNEvLj1MEhsmYISMyghMgGRPkGyQTOBUucvlCKiAzip1T5JVyFJKwRMNzqiwwoOgZTXL2okIIrLZMQCzpqXzjA7AXdMSPW9sgdmyRs8yLTB54Au47cEHMMZrb5/EZQUlYOzD8Pw+5eYf+q2W+gFUeD58Ax+PI0CbsNsrAAAAAElFTkSuQmCC\') }',
-        'body.night .fancybox-skin { background: #363636; }'
+        'body.night .fancybox-skin { background: #363636; }',
+        'body.night #user_search_results { background-color: #302E31; color: #FFF; }',
+        'body.night .searchplace:hover, body.night .searchuser:hover, body.night .searchtrip:hover { background-color: #151415; }'
     ].join('\n');
 
     // Nightmode images

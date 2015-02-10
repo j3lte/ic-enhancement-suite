@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.3.4
+// @version      0.3.5
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
@@ -15,7 +15,8 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = "0.3.4";
+    var version = '0.3.5';
+    var enhance_id = '_ic_enhance_options';
 
     // Variables
     var win = window;
@@ -31,31 +32,6 @@ function ic_FunctionWrapper() {
         };
     }
 
-    function ICES (win, $) {
-        this.version = "0.3.2";
-        this.defaults = {
-            hideQuestionBlock : false,
-            hideEmptyMatches : false,
-            hideWelcomeForm : false,
-            hideInviteForm : false,
-            loadMemberOnHover : false,
-            openInNew : false,
-            nightMode : false
-        };
-        this.opts = defaults;
-        this.win = win;
-        this.$ = $;
-
-        this.init();
-    }
-
-    ICES.prototype.init = function(){};
-    ICES.prototype.getSettings = function(){};
-    ICES.prototype.saveSettings = function(){};
-    ICES.prototype.switchNightMode = function(){};
-
-    win.ICES = new ICES(win, $ic);
-
     var defaults = {
         version : version,
         hideQuestionBlock : false,
@@ -69,30 +45,50 @@ function ic_FunctionWrapper() {
     var opts = defaults;
 
     var optionLabels = [
-        { identifier: 'option_hide_question', optionKey: 'hideQuestionBlock', label: 'Hide top question block (top middle)' },
-        { identifier: 'option_hide_empty', optionKey: 'hideEmptyMatches', label: 'Hide matches widget when there are no matches (right)' },
-        { identifier: 'option_hide_welcome', optionKey: 'hideWelcomeForm', label:'Hide welcome form (top left)' },
-        { identifier: 'option_hide_invite', optionKey: 'hideInviteForm', label: 'Hide invite form (right)' },
-        { identifier: 'option_load_hover', optionKey: 'loadMemberOnHover', label: 'Load members on hover (beta)' },
-        { identifier: 'option_open_in_new', optionKey: 'openInNew', label: 'Open member links in a new window/tab' },
-        { identifier: 'option_night_mode', optionKey: 'nightMode', label: 'Night mode' }
+        { identifier: 'option_hide_question', optionKey: 'hideQuestionBlock', label: 'Hide top question block (top middle)', enabled: true },
+        { identifier: 'option_hide_empty', optionKey: 'hideEmptyMatches', label: 'Hide matches widget when there are no matches (right)', enabled: true },
+        { identifier: 'option_hide_welcome', optionKey: 'hideWelcomeForm', label:'Hide welcome form (top left)', enabled: true },
+        { identifier: 'option_hide_invite', optionKey: 'hideInviteForm', label: 'Hide invite form (right)', enabled: true },
+        { identifier: 'option_load_hover', optionKey: 'loadMemberOnHover', label: 'Load members on hover (beta)', enabled: false },
+        { identifier: 'option_open_in_new', optionKey: 'openInNew', label: 'Open member links in a new window/tab', enabled: true },
+        { identifier: 'option_night_mode', optionKey: 'nightMode', label: 'Night mode', enabled: true }
     ];
 
-    if ($ic.cookie) {
-        if ($ic.cookie('ic_enhance_options')) {
+    function loadSettings() {
+        if (win.localStorage) {
+            if (win.localStorage[enhance_id]) {
+                try {
+                    opts = JSON.parse(win.localStorage[enhance_id]);
+                } catch (e) {
+                    opts = defaults;
+                    saveSettings();
+                }
+            } else {
+                opts = defaults;
+                saveSettings();
+            }
+        } else if ($ic.cookie('ic_enhance_options')) {
             try {
                 opts = JSON.parse($ic.cookie('ic_enhance_options'));
             } catch (e) {
                 opts = defaults;
+                saveSettings();
             }
-        } else {
-            opts = defaults;
+        }
+    }
+
+    function saveSettings() {
+        if (win.localStorage) {
+            win.localStorage[enhance_id] = JSON.stringify(opts);
+        } else if ($ic.cookie) {
             $ic.cookie('ic_enhance_options', JSON.stringify(opts), { path: '/' });
         }
     }
 
-    // CSS ENHANCEMENTS
+    loadSettings();
+
     var css = [
+        '/* ICES ENHANCEMENTS */',
         '#userBox { width: 158px; z-index:10000; padding: 2px; border: 1px solid #0099B0;position: fixed;left: 10px;top: 111px;font-size: 10px;background: #fff; }',
         '#userBox .profile_field { border: 0px solid #000; padding: 0px; line-height: 11px; clear: both; }',
         '#userBox .job_title { clear: both; color: #666; padding-bottom: 0; font-size: 10px; line-height: 11px; white-space: nowrap; overflow: hidden; border-top: 1px solid #CCC; border-bottom: 1px solid #CCC; }',
@@ -102,20 +98,14 @@ function ic_FunctionWrapper() {
         '.google-link { position: absolute;background: rgba(255,255,255,0.3);left: 0;bottom: 0;width: 100%;text-align: center;color: #000;font-size: 10px;text-decoration: none; }',
         '#saveAndReloadOptions.disabled { opacity: 0.1; }',
         '.navigation a { padding: 8px 7px; }',
-        '#enhance_tabs label { color:#FFF; }'
-    ].join('\n');
-
-    // SCROLLBARS (WEBKIT)
-    css += '\n';
-    css += [
+        '.navigation-icon img { margin-top: -4px; }',
+        '#enhance_tabs label { color:#FFF; }',
+        '.header .navigation a.ic_enhance_suite { padding: 0; margin-right: -9px; margin-left: 15px; }',
+        '/* SCROLLBARS */',
         '::-webkit-scrollbar { width: 12px; }',
         '::-webkit-scrollbar-track { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
-        '::-webkit-scrollbar-thumb { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }'
-    ].join('\n');
-
-    // NIGHT MODE
-    css += '\n';
-    css += [
+        '::-webkit-scrollbar-thumb { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
+        '/* NIGHTMODE */',
         'body.night .white { background-color: #302E31; }',
         'body.night, .night .widget.white { background-color: #302E31; color: #fff; }',
         'body.night h1 { background-image: url("/images/h1_white.png"); }',
@@ -148,6 +138,25 @@ function ic_FunctionWrapper() {
         'body.night #user_search_results { background-color: #302E31; color: #FFF; }',
         'body.night .searchplace:hover, body.night .searchuser:hover, body.night .searchtrip:hover { background-color: #151415; }'
     ].join('\n');
+
+    if (typeof GM_addStyle != "undefined") {
+        GM_addStyle(css);
+    } else if (typeof PRO_addStyle != "undefined") {
+        PRO_addStyle(css);
+    } else if (typeof addStyle != "undefined") {
+        addStyle(css);
+    } else {
+        var node = document.createElement("style");
+        node.type = "text/css";
+        node.appendChild(document.createTextNode(css));
+        var heads = document.getElementsByTagName("head");
+        if (heads.length > 0) {
+            heads[0].appendChild(node);
+        } else {
+            // no head yet, stick it whereever
+            document.documentElement.appendChild(node);
+        }
+    }
 
     // Nightmode images
     var nightmode_img = {
@@ -188,47 +197,43 @@ function ic_FunctionWrapper() {
         }
     };
 
-    if (typeof GM_addStyle != "undefined") {
-        GM_addStyle(css);
-    } else if (typeof PRO_addStyle != "undefined") {
-        PRO_addStyle(css);
-    } else if (typeof addStyle != "undefined") {
-        addStyle(css);
-    } else {
-        var node = document.createElement("style");
-        node.type = "text/css";
-        node.appendChild(document.createTextNode(css));
-        var heads = document.getElementsByTagName("head");
-        if (heads.length > 0) {
-            heads[0].appendChild(node);
-        } else {
-            // no head yet, stick it whereever
-            document.documentElement.appendChild(node);
-        }
-    }
-
     // Body element
     var $body = $ic('body');
-
+    // Make sure nightmode is already set before we do all the checks (matter of speed)
     if (opts.nightMode) {
         $body.addClass('night');
-
-        var keys = Object.keys(nightmode_img);
-        var replaceImg = function(img) {
-            $ic(img.identifier).each(function () {
-                if ($ic(this).attr('src').indexOf(img.filename) !== -1) {
-                    $ic(this).attr('src',img.replacement);
-                }
-            });
-        };
-
-        // replace all img with the white base64 version
-        for (var i = 0; i < keys.length; i++) {
-            var img = nightmode_img[keys[i]];
-            replaceImg(img);
-        }
-
     }
+
+    function replaceImg(img, revert) {
+        $ic(img.identifier).each(function () {
+            if ($ic(this).attr('src').indexOf(img.filename) !== -1 && !revert) {
+                $ic(this).data('orig-src', $ic(this).attr('src'));
+                $ic(this).attr('src',img.replacement);
+            } else if (revert && $ic(this).data('orig-src')) {
+                $ic(this).attr('src',$ic(this).data('orig-src'));
+            }
+        });
+    }
+
+    function flipNightMode() {
+        var keys = Object.keys(nightmode_img);
+        if (opts.nightMode) {
+            $body.addClass('night');
+            // replace all img with the white base64 version
+            for (var i = 0; i < keys.length; i++) {
+                var img = nightmode_img[keys[i]];
+                replaceImg(img);
+            }
+        } else if (!opts.nightMode && $body.hasClass('night')) {
+            $body.removeClass('night');
+            for (var i = 0; i < keys.length; i++) {
+                var img = nightmode_img[keys[i]];
+                replaceImg(img, true);
+            }
+        }
+    }
+
+    flipNightMode();
 
     // $membox is used for the downloaded content
     var $memBox = $ic('<div />');
@@ -241,15 +246,13 @@ function ic_FunctionWrapper() {
     var $loader = $ic('<div id="loader" style="opacity: 0.6; z-index: 10000; display: none; position: fixed; right: 20px;bottom: 0; width: 240px; height: 16px; background: #0099B0;text-align: center; color: #FFF; padding: 5px 0;"></div>');
     $body.append($loader);
 
-    function showLoader(message) {
-        $loader.text(message);
-        if ($loader.is(':hidden')) {
-            $loader.show();
-        }
-    }
-
-    function hideLoader() {
-        if (!$loader.is(':hidden')) {
+    function loader(message) {
+        if (message) {
+            $loader.text(message);
+            if ($loader.is(':hidden')) {
+                $loader.show();
+            }
+        } else {
             $loader.hide();
         }
     }
@@ -260,7 +263,7 @@ function ic_FunctionWrapper() {
 
     // Loads the member page
     function loadMember(link) {
-        showLoader('Loading member...');
+        loader('Loading member...');
         $memBox.load(link, function(){
             //callback after your data is in loaded into body.
             var userName = $memBox.find('.username').parent();
@@ -291,7 +294,7 @@ function ic_FunctionWrapper() {
             userBoxes[link] = $userBox.html();
             link = null;
 
-            hideLoader();
+            loader();
             $userBox.fadeIn(500);
 
             win.console.log('[IC Enhancement Suite] :: User shown');
@@ -313,7 +316,7 @@ function ic_FunctionWrapper() {
                     $userBox.show();
 
                 } else {
-                    showLoader('Loading member in 7s...');
+                    loader('Loading member in 7s...');
                     timer = win.setTimeout(function() {
                         // Execute when timer reached
                         win.console.log('[IC Enhancement Suite] :: Loading user : ' + link);
@@ -333,7 +336,7 @@ function ic_FunctionWrapper() {
                 win.clearTimeout(timer);
                 ev = null;
             }
-            hideLoader();
+            loader();
         });
 
         // Userbox clicks
@@ -355,36 +358,35 @@ function ic_FunctionWrapper() {
         return false;
     }
 
-    if (opts.openInNew) {
-        // Open online members in new tab/window
-        $body.on('click', '.online_box a', open_new);
-
-        // Open featured in new tab/window
-        $body.on('click','.featured_box a', open_new);
-
-        // Open interest in new tab/window
-        $body.on('click','.interest_box a', open_new);
+    function switchOpenInNew() {
+        if (opts.openInNew) {
+            $body.on('click', '.online_box a', open_new); // Open online members in new tab/window
+            $body.on('click','.featured_box a', open_new); // Open featured in new tab/window
+            $body.on('click','.interest_box a', open_new); // Open interest in new tab/window
+        } else {
+            $body.off('click', '.online_box a', open_new); // Open online members in new tab/window
+            $body.off('click','.featured_box a', open_new); // Open featured in new tab/window
+            $body.off('click','.interest_box a', open_new); // Open interest in new tab/window
+        }
     }
 
-    // Remove match box if there are no matches
-    if (opts.hideEmptyMatches && $ic('.potential_match .match-last').length) {
-        console.log('[IC Enhancement Suite] :: No matches, hiding box');
-        $ic('.potential_match').hide();
+    switchOpenInNew();
+
+    function switchHideElements() {
+
+        if (opts.hideEmptyMatches && $ic('.potential_match .match-last').length) {
+            console.log('[IC Enhancement Suite] :: No matches, hiding box');
+            $ic('.potential_match').hide();
+        } else {
+            $ic('.potential_match').show();
+        }
+
+        $ic('.nearby-block.question').css('display', (opts.hideQuestionBlock ? 'none' : 'block'));
+        $ic('.widget.tutorial-welcome').css('display', (opts.hideWelcomeForm ? 'none' : 'block'));
+        $ic('.widget.invite-form').css('display', (opts.hideInviteForm ? 'none' : 'block'));
     }
 
-    // Remove nearby question block
-    if (opts.hideQuestionBlock) {
-        $ic('.nearby-block.question').css('display', 'none');
-    }
-
-    if (opts.hideWelcomeForm) {
-        $ic('.widget.tutorial-welcome').css('display', 'none');
-    }
-
-    // Remove nearby question block
-    if (opts.hideInviteForm) {
-        $ic('.widget.invite-form').css('display', 'none');
-    }
+    switchHideElements();
 
     // Open fancybox images originals
     $body.on('click','.fancybox-image', open_new);
@@ -400,19 +402,23 @@ function ic_FunctionWrapper() {
     });
 
     // Enhance Dialog (Options screen)
-    $ic('.navigation').append('<a href="#" class="ic_enhance_suite">Enhance</a>');
+    //$ic('.navigation').append('<a href="#" class="ic_enhance_suite">Enhance</a>');
+    $ic('.navigation').append('<a href="#" class="ic_enhance_suite navigation-icon navigation_tip" title="InnerCircle Enhancement Suite"><img src="data:image/png;base64,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"/></a>');
+
     var $enhDialog = $ic('<div id="enhancedialog" title="Enhancements" class="dialog tabs-dialog" />');
     function createEnhanceDialog() {
         var dialogContent =  '<div id="enhance_tabs" class="tabs-no-padding">\n';
         for (var i = 0; i < optionLabels.length; i++) {
             var opt = optionLabels[i];
-            dialogContent += '    <input type="checkbox" class="option_check" data-option="' + opt.optionKey + '" id="' + opt.identifier + '" name="' + opt.identifier + '" ' + (opts[opt.optionKey] ? 'checked="checked"' : '') + '>\n';
-            dialogContent += '    <label for="' + opt.identifier + '" class="optional">' + opt.label + '</label>\n';
-            dialogContent += '    <div class="clear"></div>\n';
+            if (opt.enabled) {
+                dialogContent += '    <input type="checkbox" class="option_check" data-option="' + opt.optionKey + '" id="' + opt.identifier + '" name="' + opt.identifier + '" ' + (opts[opt.optionKey] ? 'checked="checked"' : '') + '>\n';
+                dialogContent += '    <label for="' + opt.identifier + '" class="optional">' + opt.label + '</label>\n';
+                dialogContent += '    <div class="clear"></div>\n';
+            }
         }
         // SUBMIT
         dialogContent += '    <dt></dt>\n';
-        dialogContent += '    <a href="#" id="saveAndReloadOptions" class="button disabled">Save and reload</a>\n';
+        dialogContent += '    <a href="#" id="saveAndReloadOptions" class="button">Close</a>\n';
         dialogContent += '</div>';
         $enhDialog.html(dialogContent);
     }
@@ -431,23 +437,38 @@ function ic_FunctionWrapper() {
         $enhDialog.dialog('open');
     });
 
-    $body.on('click', '.option_check',function (e){
-        $ic('#saveAndReloadOptions').removeClass('disabled');
-    });
-
-    $body.on('click', '#saveAndReloadOptions',function (e){
-        e.preventDefault();
-        if ($ic(this).hasClass('disabled')) {
-            return false;
-        }
+    function saveForm() {
         opts = { version : version };
         $ic('.option_check').each(function () {
             var key = $ic(this).data('option');
             opts[key] = $ic(this).is(':checked');
         });
-        var json = JSON.stringify(opts);
-        $.cookie('ic_enhance_options', json, { path: '/' });
-        win.location.reload();
+        saveSettings();
+    }
+
+    $body.on('click', '.option_check',function (e){
+        saveForm();
+        var option = $ic(this).data('option');
+        switch(option) {
+            case 'nightMode':
+                flipNightMode();
+                break;
+            case 'openInNew':
+                switchOpenInNew();
+                break;
+            case 'hideEmptyMatches':
+            case 'hideQuestionBlock':
+            case 'hideWelcomeForm':
+            case 'hideInviteForm':
+                switchHideElements();
+                break;
+        }
+    });
+
+    $body.on('click', '#saveAndReloadOptions',function (e){
+        e.preventDefault();
+        saveForm();
+        $enhDialog.dialog('close');
     });
 
     // Fix the inplace editor for profile editing (Need to debug this further)
@@ -456,7 +477,6 @@ function ic_FunctionWrapper() {
         var html = $this.html();
         $this.html(html.replace('\n','<br /><br />'));
     });
-
 
     // Make wall pics clickable
     $body.on('click', '.wall-pic', function (e) {

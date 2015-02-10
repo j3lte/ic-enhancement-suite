@@ -8,6 +8,8 @@
 // @downloadURL  https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
 // @match        https://www.theinnercircle.co/*
 // @include      https://www.theinnercircle.co/*
+// @icon         https://raw.githubusercontent.com/j3lte/ic-enhancement-suite/master/ic_plus.png
+// @license      MIT License https://raw.githubusercontent.com/j3lte/ic-enhancement-suite/master/LICENSE
 // @grant        unsafeWindow
 // @date         01.26.2015
 // ==/UserScript==

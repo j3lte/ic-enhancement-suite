@@ -17,7 +17,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = '0.3.5';
+    var version = '0.3.6';
     var enhance_id = '_ic_enhance_options';
 
     // Variables
@@ -376,7 +376,7 @@ function ic_FunctionWrapper() {
 
     function switchHideElements() {
 
-        if (opts.hideEmptyMatches && $ic('.potential_match .match-last').length) {
+        if (opts.hideEmptyMatches && $ic('.potential_match').find('.match').length === 1 && $ic('.potential_match').find('.match').first().hasClass('match-last')) {
             console.log('[IC Enhancement Suite] :: No matches, hiding box');
             $ic('.potential_match').hide();
         } else {

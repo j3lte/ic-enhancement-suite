@@ -4,13 +4,20 @@
   "forin": true,
   "indent": 2,
   "latedef": "nofunc",
-  "newcap": true,
+  "newcap": false,
   "noarg": true,
   "noempty": true,
   "nonbsp": true,
   "quotmark": "single",
   "undef": true,
   "unused": true,
+  "predef": [
+    "unsafeWindow",
+    "jQuery",
+    "GM_addStyle",
+    "PRO_addStyle",
+    "addStyle"
+  ],
 
   "asi": true,
   "eqnull": true,

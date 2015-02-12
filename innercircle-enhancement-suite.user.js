@@ -24,9 +24,15 @@ function ic_FunctionWrapper() {
     var win = window;
     var $ic;
 
-    if (typeof unsafeWindow != 'undefined') win = unsafeWindow;
-    if (typeof unsafeWindow == 'undefined' ) $ic = jQuery;
-    else $ic = unsafeWindow.jQuery || jQuery;
+    if (typeof unsafeWindow !== 'undefined') {
+        win = unsafeWindow;
+    }
+
+    if (typeof unsafeWindow === 'undefined' ) {
+        $ic = jQuery;
+    } else {
+        $ic = unsafeWindow.jQuery || jQuery
+    }
 
     if (!win.console) {
         win.console = {
@@ -141,17 +147,17 @@ function ic_FunctionWrapper() {
         'body.night .searchplace:hover, body.night .searchuser:hover, body.night .searchtrip:hover { background-color: #151415; }'
     ].join('\n');
 
-    if (typeof GM_addStyle != "undefined") {
+    if (typeof GM_addStyle !== 'undefined') {
         GM_addStyle(css);
-    } else if (typeof PRO_addStyle != "undefined") {
+    } else if (typeof PRO_addStyle !== 'undefined') {
         PRO_addStyle(css);
-    } else if (typeof addStyle != "undefined") {
+    } else if (typeof addStyle !== 'undefined') {
         addStyle(css);
     } else {
-        var node = document.createElement("style");
-        node.type = "text/css";
+        var node = document.createElement('style');
+        node.type = 'text/css';
         node.appendChild(document.createTextNode(css));
-        var heads = document.getElementsByTagName("head");
+        var heads = document.getElementsByTagName('head');
         if (heads.length > 0) {
             heads[0].appendChild(node);
         } else {
@@ -218,18 +224,19 @@ function ic_FunctionWrapper() {
     }
 
     function flipNightMode() {
-        var keys = Object.keys(nightmode_img);
+        var keys = Object.keys(nightmode_img),
+            i, img;
         if (opts.nightMode) {
             $body.addClass('night');
             // replace all img with the white base64 version
-            for (var i = 0; i < keys.length; i++) {
-                var img = nightmode_img[keys[i]];
+            for (i = 0; i < keys.length; i++) {
+                img = nightmode_img[keys[i]];
                 replaceImg(img);
             }
         } else if (!opts.nightMode && $body.hasClass('night')) {
             $body.removeClass('night');
-            for (var i = 0; i < keys.length; i++) {
-                var img = nightmode_img[keys[i]];
+            for (i = 0; i < keys.length; i++) {
+                img = nightmode_img[keys[i]];
                 replaceImg(img, true);
             }
         }
@@ -281,11 +288,11 @@ function ic_FunctionWrapper() {
                 var h = Math.round(thumbs.find('.rsImg').length / 3) * 50;
                 thumbs.css('height', h + 'px');
 
-                thumbs.find('.rsImg').each(function (i){
+                thumbs.find('.rsImg').each(function (){
                     if ($ic(this).data('rsbigimg')) {
                         $ic(this).attr('href', $ic(this).data('rsbigimg'));
                     }
-                    $ic(this).attr('target',"_blank");
+                    $ic(this).attr('target','_blank');
                 });
 
                 $userBox.append(thumbs);
@@ -333,7 +340,7 @@ function ic_FunctionWrapper() {
             }
         });
 
-        $body.on('mouseout', 'a', function(event) {
+        $body.on('mouseout', 'a', function() {
             if (timer) {
                 win.clearTimeout(timer);
                 ev = null;
@@ -347,7 +354,7 @@ function ic_FunctionWrapper() {
     }
 
     function open_new() {
-        $ic(this).target = "_blank";
+        $ic(this).target = '_blank';
         if ($ic(this).prop('href')) {
             win.open($ic(this).prop('href'));
         } else if ($ic(this).prop('src')) {
@@ -362,13 +369,17 @@ function ic_FunctionWrapper() {
 
     function switchOpenInNew() {
         if (opts.openInNew) {
-            $body.on('click', '.online_box a', open_new); // Open online members in new tab/window
-            $body.on('click','.featured_box a', open_new); // Open featured in new tab/window
-            $body.on('click','.interest_box a', open_new); // Open interest in new tab/window
+            $body.on('click', '.online_box a', open_new);
+            $body.on('click', '.featured_box a', open_new);
+            $body.on('click', '.interest_box a', open_new);
+            $body.on('click', 'a.username', open_new);
+            $body.on('click', '.activity_widget a.activity_pic, .activity_widget .activity_description a:first-child', open_new);
         } else {
-            $body.off('click', '.online_box a', open_new); // Open online members in new tab/window
-            $body.off('click','.featured_box a', open_new); // Open featured in new tab/window
-            $body.off('click','.interest_box a', open_new); // Open interest in new tab/window
+            $body.off('click', '.online_box a', open_new);
+            $body.off('click', '.featured_box a', open_new);
+            $body.off('click', '.interest_box a', open_new);
+            $body.off('click', 'a.username', open_new);
+            $body.off('click', '.activity_widget a.activity_pic, .activity_widget .activity_description a:first-child', open_new);
         }
     }
 
@@ -404,7 +415,6 @@ function ic_FunctionWrapper() {
     });
 
     // Enhance Dialog (Options screen)
-    //$ic('.navigation').append('<a href="#" class="ic_enhance_suite">Enhance</a>');
     $ic('.navigation').append('<a href="#" class="ic_enhance_suite navigation-icon navigation_tip" title="InnerCircle Enhancement Suite"><img src="data:image/png;base64,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"/></a>');
 
     var $enhDialog = $ic('<div id="enhancedialog" title="Enhancements" class="dialog tabs-dialog" />');
@@ -448,7 +458,7 @@ function ic_FunctionWrapper() {
         saveSettings();
     }
 
-    $body.on('click', '.option_check',function (e){
+    $body.on('click', '.option_check',function (){
         saveForm();
         var option = $ic(this).data('option');
         switch(option) {
@@ -493,9 +503,9 @@ function ic_FunctionWrapper() {
     });
 
     // DEBUG
-    win.console.log("[IC Enhancement Suite] :: Succesfully loaded Suite, version " + version);
+    win.console.log('[IC Enhancement Suite] :: Succesfully loaded Suite, version ' + version);
 }
 
-var ic_ScriptObject = document.createElement("script");
-ic_ScriptObject.textContent = "(" + ic_FunctionWrapper.toString() + ")();";
+var ic_ScriptObject = document.createElement('script');
+ic_ScriptObject.textContent = '(' + ic_FunctionWrapper.toString() + ')();';
 document.body.appendChild(ic_ScriptObject);

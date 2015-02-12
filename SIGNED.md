@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQEcBAABAgAGBQJU3LLkAAoJEFejYcLP1d0ita8H/2T0QZS47YY85oOe9EvZN5Om
-Q/6cYL9rP4T4jLKr6Ad1JlM3BLh56Sds8+0PubfQ5ll7LEE5zZGoMXka79l18Abm
-cbOwZwxUvDWvU7q8JLJTucKdUHMEOAsb0lGNpkP80nKPFpav4Nke3OinRGeujXyX
-98QMnsVbTmKb7TgVhOe0Zz3g+Ug2NQCOcmzX/9a+42sjST/2ZBvb4c6sRpWf06Qj
-OjcXekZEPX0V2moffDW0mAcPytDVDFUhADVI93fB4P3RXjX33oZ5kPhTUFKQOeha
-DPPq8iKDdi+BK8csVmAdRg+TsoVF6Kqd5Mu3xGerZRVJbgjEsEMynR3DWFmBEK0=
-=iaTs
+iQEcBAABAgAGBQJU3LNyAAoJEFejYcLP1d0ikC8H/2cjQsPHkkC016IHgNMoyAd+
+PcGqnIyFsawhlnNAFNDSYhGyd7FdaK/aeJSpJ33MkVPjy26RShGKh6PgjMXjmFMT
+0nhUUBQKVEbFsfEhzOjC/a4ygG1SmTUFCZfXtHmHs/v56kXpM9y46epNssZqc1JP
+sRI/TcxhspCPPjnnjOM4OKdOB5dcmoKFjkJM3SHbgb8VYhROXdyEuHywc1ftascx
+OllXEDHa7yH930sBrKRTTBAxqaePtCD0GWfoXJl5Bh5JfxzxQL/KJXXvwl3iLJ2L
+t9fx61U4k/xxHEFmm2X+fYJ6wVVnSEkBPLLV/cJ8AOWPSyGj6rh3si6uxJ3z/jI=
+=3Ewf
 -----END PGP SIGNATURE-----
 
 ```
@@ -29,7 +29,7 @@ size   exec  file                                     contents
 439            .jshintrc                              e904d054b6b0dada5a9fd25e505793068e502a08a769167c775dae0f34a76ab6                                                                 
 663            gulpfile.js                            cd4de6dd1cfdc5915b26f96dea11666716c21ba2f93240d77f8777951a53c58a                                                                 
 1552           ic_plus.png                            871b3cd93e15ea2faaf4fefad583b51234d71257a0555126455e46e1d686e106|11c336241befe6205f19bb9864fe33ec4e9a867447a53f9fc0afe4203268441c
-32334          innercircle-enhancement-suite.user.js  c2ae009c7983801e5928416584d9554dc0c4edc7920653071bd0382530352906                                                                 
+32334          innercircle-enhancement-suite.user.js  a8c981c29d17ea06721876e57225ac704f67ce692196cfdce41de984034d70a4                                                                 
 1083           LICENSE                                3175819a8e691b22f841cb22bf1d2f7bb38feac56b38d7df9eab86f12ecee359                                                                 
 442            package.json                           e48795990b575aae1fc4e278b27b3e8467e20f97cf9176331457ccc98223dbfb                                                                 
 1484           README.md                              f58047a8294cd53d0aebeb7fd6cd30dde221cba43ddb526163aa26c31b2cbf55                                                                 

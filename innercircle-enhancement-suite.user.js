@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.3.6
+// @version      0.3.7
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
@@ -17,7 +17,7 @@
 function ic_FunctionWrapper() {
 
     // Define global version
-    var version = '0.3.6';
+    var version = '0.3.7';
     var enhance_id = '_ic_enhance_options';
 
     // Variables
@@ -109,6 +109,7 @@ function ic_FunctionWrapper() {
         '.navigation-icon img { margin-top: -4px; }',
         '#enhance_tabs label { color:#FFF; }',
         '.header .navigation a.ic_enhance_suite { padding: 0; margin-right: -9px; margin-left: 15px; }',
+        '.path_user a.fb { color: #0000FF; }',
         '/* SCROLLBARS */',
         '::-webkit-scrollbar { width: 12px; }',
         '::-webkit-scrollbar-track { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
@@ -374,12 +375,14 @@ function ic_FunctionWrapper() {
             $body.on('click', '.interest_box a', open_new);
             $body.on('click', 'a.username', open_new);
             $body.on('click', '.activity_widget a.activity_pic, .activity_widget .activity_description a:first-child', open_new);
+            $body.on('click', '.birthdays_box a', open_new);
         } else {
             $body.off('click', '.online_box a', open_new);
             $body.off('click', '.featured_box a', open_new);
             $body.off('click', '.interest_box a', open_new);
             $body.off('click', 'a.username', open_new);
             $body.off('click', '.activity_widget a.activity_pic, .activity_widget .activity_description a:first-child', open_new);
+            $body.off('click', '.birthdays_box a', open_new);
         }
     }
 
@@ -501,6 +504,22 @@ function ic_FunctionWrapper() {
             }
         }
     });
+
+    // Add Facebook links (connected)
+    var $connected = $ic('#connected');
+    var graphRexExp = /(http|https):\/\/graph.facebook.com\/(\d+)\/.*/;
+    if ($connected) {
+        // Find elements
+        $connected.find('.path_user img').each(function () {
+            var $img = $ic(this);
+            var match = $img.prop('src').match(graphRexExp);
+            if (match) {
+                var $div = $img.parent().find('div').first();
+                var txt = $div.text();
+                $div.html('<a class="fb" href="https://www.facebook.com/profile.php?id=' + match[2] + '" target="_blank">' + txt + '</a>');
+            }
+        });
+    }
 
     // DEBUG
     win.console.log('[IC Enhancement Suite] :: Succesfully loaded Suite, version ' + version);

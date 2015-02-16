@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.3.8
+// @version      0.4.0
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js
@@ -11,5 +11,5 @@
 // @icon         https://raw.githubusercontent.com/j3lte/ic-enhancement-suite/master/ic_plus.png
 // @license      MIT License https://raw.githubusercontent.com/j3lte/ic-enhancement-suite/master/LICENSE
 // @grant        unsafeWindow
-// @date         01.26.2015
+// @run-at       document-start
 // ==/UserScript==

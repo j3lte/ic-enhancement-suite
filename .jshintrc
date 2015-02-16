@@ -16,8 +16,10 @@
     "jQuery",
     "GM_addStyle",
     "PRO_addStyle",
-    "addStyle"
+    "addStyle",
+    "innerCircleEnhancementSuite"
   ],
+  "-W020": false,
 
   "asi": true,
   "eqnull": true,

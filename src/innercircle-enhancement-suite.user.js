@@ -1,29 +1,12 @@
-function ic_FunctionWrapper() {
+function ICES () {
 
-    // Define global version
-    var enhance_id = '_ic_enhance_options';
-
-    // Variables
-    var win = window;
-    var $ic;
-
+    this.win = window;
     if (typeof unsafeWindow !== 'undefined') {
-        win = unsafeWindow;
+        this.win = unsafeWindow;
     }
 
-    if (typeof unsafeWindow === 'undefined' ) {
-        $ic = jQuery;
-    } else {
-        $ic = unsafeWindow.jQuery || jQuery
-    }
-
-    if (!win.console) {
-        win.console = {
-            log : function(){}
-        };
-    }
-
-    var defaults = {
+    this.enhance_id = '_ic_enhance_options';
+    this.defaults = {
         hideQuestionBlock : false,
         hideEmptyMatches : false,
         hideWelcomeForm : false,
@@ -32,9 +15,8 @@ function ic_FunctionWrapper() {
         openInNew : false,
         nightMode : false
     };
-    var opts = defaults;
 
-    var optionLabels = [
+    this.optionLabels = [
         { identifier: 'option_hide_question', optionKey: 'hideQuestionBlock', label: 'Hide top question block (top middle)', enabled: true },
         { identifier: 'option_hide_empty', optionKey: 'hideEmptyMatches', label: 'Hide matches widget when there are no matches (right)', enabled: true },
         { identifier: 'option_hide_welcome', optionKey: 'hideWelcomeForm', label:'Hide welcome form (top left)', enabled: true },
@@ -44,39 +26,35 @@ function ic_FunctionWrapper() {
         { identifier: 'option_night_mode', optionKey: 'nightMode', label: 'Night mode', enabled: true }
     ];
 
-    function loadSettings() {
-        if (win.localStorage) {
-            if (win.localStorage[enhance_id]) {
-                try {
-                    opts = JSON.parse(win.localStorage[enhance_id]);
-                } catch (e) {
-                    opts = defaults;
-                    saveSettings();
-                }
-            } else {
-                opts = defaults;
-                saveSettings();
-            }
-        } else if ($ic.cookie('ic_enhance_options')) {
+    this.opts = this.defaults;
+
+}
+
+ICES.prototype.loadSettings = function (){
+    var _this = this;
+    if (_this.win.localStorage) {
+        if (_this.win.localStorage[_this.enhance_id]) {
             try {
-                opts = JSON.parse($ic.cookie('ic_enhance_options'));
+                _this.opts = JSON.parse(_this.win.localStorage[_this.enhance_id]);
             } catch (e) {
-                opts = defaults;
-                saveSettings();
+                _this.opts = _this.defaults;
+                _this.saveSettings();
             }
+        } else {
+            _this.opts = _this.defaults;
+            _this.saveSettings();
         }
     }
+};
 
-    function saveSettings() {
-        if (win.localStorage) {
-            win.localStorage[enhance_id] = JSON.stringify(opts);
-        } else if ($ic.cookie) {
-            $ic.cookie('ic_enhance_options', JSON.stringify(opts), { path: '/' });
-        }
+ICES.prototype.saveSettings = function (){
+    var _this = this;
+    if (_this.win.localStorage) {
+        _this.win.localStorage[_this.enhance_id] = JSON.stringify(_this.opts);
     }
+};
 
-    loadSettings();
-
+ICES.prototype.appendCSS = function () {
     var css = [
         '/* ICES ENHANCEMENTS */',
         '#userBox { width: 158px; z-index:10000; padding: 2px; border: 1px solid #0099B0;position: fixed;left: 10px;top: 111px;font-size: 10px;background: #fff; }',
@@ -97,37 +75,37 @@ function ic_FunctionWrapper() {
         '::-webkit-scrollbar-track { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
         '::-webkit-scrollbar-thumb { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
         '/* NIGHTMODE */',
-        'body.night .white { background-color: #302E31; }',
-        'body.night, .night .widget.white { background-color: #302E31; color: #fff; }',
-        'body.night h1 { background-image: url("/images/h1_white.png"); }',
-        'body.night h1, body.night h1 a, body.night .job_title, body.night .profile_field b { color:#fff; }',
-        'body.night .rsDefault, body.night .rsDefault .rsOverflow, body.night .rsDefault .rsSlide, body.night .rsDefault .rsVideoFrameHolder, body.night .rsDefault .rsThumbs { background-color: #323232; }',
-        'body.night .member_event_date, body.night .event_date, body.night .invites_count, body.night .my_trip_date { background-color: #0099B0; }',
-        'body.night .grey, body.night .message_accent { background-color: #151415; }',
-        'body.night .grey .free_corner { border-right: 15px solid #0099B0; }',
-        'body.night .grey .free_text { background-color: #0099B0; }',
-        'body.night .username, body.night a.username, body.night .spotname, body.night a.spotname { color: #FFFFFF; }',
-        'body.night .featured_box, body.night .interest_box, body.night .ui-tooltip { color: #FFF; }',
-        'body.night .nearby-block { border-top:0px solid #151415; }',
-        'body.night .widget, body.night .hotposts_container { color: #FFF; }',
-        'body.night .free_action { color: #151415; }',
-        'body.night .answer-label, body.night #answers-element label { background-color: #302E31; color: #FFF; }',
-        'body.night #answers-element label.answer-common { background-color: #0099B0; }',
-        'body.night .message, body.night .message_send, body.night .message_list, body.night .ui-dialog .ui-dialog-content, body.night .ui-tabs .ui-tabs-panel { background-color: #242124; }',
-        'body.night .panel-box { background-color: #302E31; }',
-        'body.night .double_user, body.night .single_user { background-color: #242124; }',
-        'body.night .ui-tabs .ui-tabs-panel, body.night .ui-tabs .ui-widget-header { background-color: #302E31; }',
-        'body.night .ui-tooltip { background-color: #0099B0; }',
-        'body.night .going_text { background: #302E31; }',
-        'body.night .map-users .double_user:nth-child(even) { background-color: #343034; }',
-        'body.night .map-users .double_user:nth-child(4n), body.night .map-users .double_user:nth-child(4n+3) { background-color: #343034; }',
-        'body.night .accordeon .ui-widget-content { border: 1px #151415 solid; background-color: #302E31; }',
-        'body.night input[type=text], body.night input[type=password], body.night textarea { background-color: #302E31; color: #FFF; }',
-        'body.night .activity_widget, body.night .circle_messages_widget, body.night .circle_activity_widget { background: #302E31!important; }',
-        'body.night .path_arrow { background-image: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAoCAYAAADHVmuAAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFhsiWzBgQwAAAIBJREFUOMvt1LERgzAMQNEvLj1MEhsmYISMyghMgGRPkGyQTOBUucvlCKiAzip1T5JVyFJKwRMNzqiwwoOgZTXL2okIIrLZMQCzpqXzjA7AXdMSPW9sgdmyRs8yLTB54Au47cEHMMZrb5/EZQUlYOzD8Pw+5eYf+q2W+gFUeD58Ax+PI0CbsNsrAAAAAElFTkSuQmCC\') }',
-        'body.night .fancybox-skin { background: #363636; }',
-        'body.night #user_search_results { background-color: #302E31; color: #FFF; }',
-        'body.night .searchplace:hover, body.night .searchuser:hover, body.night .searchtrip:hover { background-color: #151415; }'
+        'html.night .white { background-color: #302E31; }',
+        'html.night body, .night .widget.white { background-color: #302E31; color: #fff; }',
+        'html.night h1 { background-image: url("/images/h1_white.png"); }',
+        'html.night h1, html.night h1 a, html.night .job_title, html.night .profile_field b { color:#fff; }',
+        'html.night .rsDefault, html.night .rsDefault .rsOverflow, html.night .rsDefault .rsSlide, html.night .rsDefault .rsVideoFrameHolder, html.night .rsDefault .rsThumbs { background-color: #323232; }',
+        'html.night .member_event_date, html.night .event_date, html.night .invites_count, html.night .my_trip_date { background-color: #0099B0; }',
+        'html.night .grey, html.night .message_accent { background-color: #151415; }',
+        'html.night .grey .free_corner { border-right: 15px solid #0099B0; }',
+        'html.night .grey .free_text { background-color: #0099B0; }',
+        'html.night .username, html.night a.username, html.night .spotname, html.night a.spotname { color: #FFFFFF; }',
+        'html.night .featured_box, html.night .interest_box, html.night .ui-tooltip { color: #FFF; }',
+        'html.night .nearby-block { border-top:0px solid #151415; }',
+        'html.night .widget, html.night .hotposts_container { color: #FFF; }',
+        'html.night .free_action { color: #151415; }',
+        'html.night .answer-label, html.night #answers-element label { background-color: #302E31; color: #FFF; }',
+        'html.night #answers-element label.answer-common { background-color: #0099B0; }',
+        'html.night .message, html.night .message_send, html.night .message_list, html.night .ui-dialog .ui-dialog-content, html.night .ui-tabs .ui-tabs-panel { background-color: #242124; }',
+        'html.night .panel-box { background-color: #302E31; }',
+        'html.night .double_user, html.night .single_user { background-color: #242124; }',
+        'html.night .ui-tabs .ui-tabs-panel, html.night .ui-tabs .ui-widget-header { background-color: #302E31; }',
+        'html.night .ui-tooltip { background-color: #0099B0; }',
+        'html.night .going_text { background: #302E31; }',
+        'html.night .map-users .double_user:nth-child(even) { background-color: #343034; }',
+        'html.night .map-users .double_user:nth-child(4n), html.night .map-users .double_user:nth-child(4n+3) { background-color: #343034; }',
+        'html.night .accordeon .ui-widget-content { border: 1px #151415 solid; background-color: #302E31; }',
+        'html.night input[type=text], html.night input[type=password], html.night textarea { background-color: #302E31; color: #FFF; }',
+        'html.night .activity_widget, html.night .circle_messages_widget, html.night .circle_activity_widget { background: #302E31!important; }',
+        'html.night .path_arrow { background-image: url(\'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAoAAAAoCAYAAADHVmuAAAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFhsiWzBgQwAAAIBJREFUOMvt1LERgzAMQNEvLj1MEhsmYISMyghMgGRPkGyQTOBUucvlCKiAzip1T5JVyFJKwRMNzqiwwoOgZTXL2okIIrLZMQCzpqXzjA7AXdMSPW9sgdmyRs8yLTB54Au47cEHMMZrb5/EZQUlYOzD8Pw+5eYf+q2W+gFUeD58Ax+PI0CbsNsrAAAAAElFTkSuQmCC\') }',
+        'html.night .fancybox-skin { background: #363636; }',
+        'html.night #user_search_results { background-color: #302E31; color: #FFF; }',
+        'html.night .searchplace:hover, html.night .searchuser:hover, html.night .searchtrip:hover { background-color: #151415; }'
     ].join('\n');
 
     if (typeof GM_addStyle !== 'undefined') {
@@ -149,6 +127,33 @@ function ic_FunctionWrapper() {
         }
     }
 
+    if (this.opts.nightMode) {
+        document.documentElement.className += ' night';
+    }
+};
+
+ICES.prototype.setup = function () {
+
+    // Variables
+    var win = this.win;
+    var $ic;
+
+    if (typeof unsafeWindow === 'undefined' ) {
+        $ic = jQuery;
+    } else {
+        $ic = unsafeWindow.jQuery || jQuery
+    }
+
+    if (!this.win.console) {
+        this.win.console = {
+            log : function(){}
+        };
+    }
+
+    // body element
+    var $body = $ic('body');
+    var _this = this;
+
     // Nightmode images
     var nightmode_img = {
         inplace_edit : { filename: 'edit', identifier: 'img.inplace_edit', replacement: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFDcXNzYboAAAArVJREFUWMPFl81LFVEYxn8zqWUfIC4iIiIDQUhP95xdQatctCiiQne1DAokqEj7gCIljQItg/oHXGT0QdQi2kRSLZJz7FgQpVltitIwKj/h3jZz4XC5M3fubbSzuTzvM/O+z33eec+c8TKZDP9zlYURnufFTmKsvgnMAPeBh1Komdxrwv6oF0rEFGCs3gPccULjQDfQLYWaXlABxupy4A1Qm4f+AByQQj2LEuD/YwsPhRQH2Ag8MVYfjkpQsgPG6ipgFKiOIfRkqkF2Je3AmZjFATqHhk1jYgKM1TVAixOaAmYjbhkDnibpwEWgwsHtwCbgQcj1J1INci4RAcbqLUCTE/oMXJFCjUqhdgGXc2557nne7bB8RQl49XrIy1PgdHbejdWVQHMOfzzVIDOJCEin003AVic06Pt+n4OPAOsd3C+FehGV0y/C+gogd5SObq5PZQJ+NXDK4eaAtkJ5i3GgBahx8D0p1ICDzwGrHNwrhRpLRICxujqY++yaB1odvg446PA/gI44ueM6cBaocvB1KdQ7B18ClrhuSKEmExFgrK4N9vzs+gmcd/jtwE6Hfw/ciNvXOA50AeUO7pBCTQTF/Txj2SqFmk9EgLF6G7A3Z0vtdfB+IOXgASnU3WJGu5ADX4BHDm6TQs0G4pYDF3LHstidNVKAFGpECrUD2Af0+75/y6GPAWsd3CeFGixWQEnnAWP1GmAEWBGEZoA6KdSnsHuSPhE1O8UBeqKKl9QCY/WyiNZcBXYDH4HvQGepp5rQFgwNm57A2nYp1J8QkZVAvRTqZaFCpbTgV7DdvjVWN4U4MR2neKlT8C34XQf0G6sfB3t+oitKwHgObgSssbrLWL1yMQRM5IlNAWlg6YJ/GwZPt/sC6gnGbTLJFpQVeAYmgpfNNSnU70X9Oga+AhsWqnB2/QVgL+ZN0utiqwAAAABJRU5ErkJggg==' },
@@ -159,13 +164,6 @@ function ic_FunctionWrapper() {
         wink_off: { filename: 'wink_off', identifier: '.wink.icon img', replacement: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFQohk6assAAABEpJREFUWMPFl1tsFUUYx3/nFI4EjBWLKVqLAWMk6o47Izx4iYBiJOIFQrQxRiigxMQHBW0kpCYlRrSpCSagERoUNdxDCODtyQjRiFF2TvaExhQvD0QKIhZoaUuLZ335Fieb057Ti7Ivk52d2e8//+/2n1QURVzOZxRAKpUqutCGQRXwNFAD3AhcKfvTwN9AF3AU2Als08oc6+9f7qFTURQNCMCGwTSgAZgJjC3xYL3A50C9VqZlSABsGFQCq4BngHKZPgt8B+wFvgHagAioAu4F5gAznPWngHeAd7UyHSUDsGFQIVTOkKlWYC2wVStzvoirxgnoOnEVwFdArVbmeFEANgymAAfkVN3Ae0CjVubPwQSXxMxrwCLgCuAn4B6tTHu/AGwYTAC2ArOBi8ALWpnm4US5DYPFwEagDPgUWOR7uj3+nk6sfxW4H+gAnhyucXk+Enf0Ag8Dy92PlxiwYaDEV1dL0Lw4kvluw6AZWAycBmb5nm5JMvAWcA3wK7DmP6g5DcAxYIJk178MZHO2WiI9AyzVymxOoF8AvCFBudz39NelFK8CLLwCNALngSrf0x2j5NtzEqlngO2JTeMlMDMytSubs5VAvoCBZF0/oJWZ6bxvBFZLFV0AbI5d8IiMB7UyPYmfVDjGETdlhuIDrcw54JC81l7qBcBkGXcX2PSzDYO9wOMytc73dE8/Bkrxy35gFnCLCyCu8YcL7Uin0/Pz+fzdQLfv6WCYwRjbKHcBxOPxQjvuuN2PgG9HKBuOyJhxDcfUlbkrfU+PiMVszrqvebcIxkF4Qbpa9f+gQW6Vsc9loEsouRPIxis/3LKpSeYOa2XqSsjz0cA4Sek1wBTge63MSmdZ3GHbXQZ+ETfMS/zzN+A+YIkNg+tKSLM+rcwZAbBQjCWDdo4bCzGAXeKC6TYMrnIW7wD+AsYD66XXF2OhHGiWeDrle3pnQitMk9ftLoDdQKfU6RrnRKeBJgmcecCGIsar5TCzpWyvSCx5CRgjLt+R7Ib7gLkiHB6M1YsNgwywHlgqgNuAD4CPtTKt8n2qqKAaETJ5oMn39KpY9Aq4Q8BEYJPv6WXJbrhaWuVUt1tpZXq1MsukifQBlcBKoMWGQafoxED6/PXACTnp64nTN4rxP6TzFlREjcDLoobqtTJvJyieLLTOBW5wDtAnzOwBNmhlWmPtl83ZMuB50ZRpoM739Nr+AFQIvY+K1q/VymwZQHxOFLpPamW6CsnvbM42APWSZZ8BT/ievjCQKB0L/CjN4iLwibBxYpC9f5LUghrJiB+Ax7QyJ0uR5ZMklR4Q5G1C4TqtTG8RwxXAEuBZ4CaZ3gMs1Mp0D+ZiMkb8vUI0AEAPcBD4UprTUWA0cBtwF/AQMF1SLQJ+B94XjXluqFezm0XfP+U0qyjRxJJKqEMk+JtamSPDuhs6QK6Vy+l8oTZWSpEUnbNAi7juC61MZ8mX08v5/AM7mbBooQ5tRwAAAABJRU5ErkJggg==' },
         report: { filename: 'report', identifier: '.report.feedback img', replacement: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACAAAAAgCAYAAABzenr0AAAABmJLR0QA/wD/AP+gvaeTAAAACXBIWXMAAAsSAAALEgHS3X78AAAAB3RJTUUH3wEZFiEAq/n/3gAAAuNJREFUWMPFVz9oE1EY/33vjvQiUpSCgUpLjWkCWloudxahpW7dunSqnVzETRfRpYtglyySoZODm0O2Lt21ENJeLqUlCmLRYqFVQbQgJj3C+1xe4BqT5i5tzJuS79/vd7/ve3fvETOjl0ugx4s6TSyVSoNSykUAEEK8TqfTB/+NwObm5pAQogBgUJkOpJS3Jycn97veglwupwkhVn3gADAohFjN5XJa1wnE4/EHAMwmLlP5uteCnZ2dy57nfQQw0CLkRyQSGR0fH//ZFQU8z3t2CjgADKiY81egVCrdkFJuA9DbhNaEEBPpdPr9uSogpXzRBPwbgK8NNl3Fnl8LXNedAzDbYH5sGMYwgGEADxt8syrn7C0ol8uRarX6DkDCZ963LGuEiCQAMLNwXfezIlNfu4Zh3BwbG/POpMDx8fGjBnAAKNbBAUD9dhtiEiq38xYUCoUYMy81cY02sV1vNDDzUqFQiHVMQNf1ZQD9TVwJZhY+IGpBql/VCD8DxWIxDcBpRVLTtGumae75vg1fWm0gALds2y6FVSB7ml9KmfIplWyjcjZUCxzHWQAwfZp0zJzykUm2mbVpVbM9gXw+HyWiTIAtnPKRSbbd70SZfD4fbUugr6/vCYChdgX9ChBRMgDhIVW79RCqYfoAIBqg4HcieqrIPAdwNUBORUqZ8h9c9IbJzjBzEHAAuMLMr0J+/qOapmUA3P2nBY7jTDHzQohia0Q0Q0QzANaCJjHzguM4UycIMLMgomwI8N8AFi3LWrcsax3AorIFOwMQZesvMqFeOvcAWCGeYsO27aP6f9u2j5h5I8QDWAoTVC6XL1ar1V0AsRAFalLKeH2Y1PB+CnBYOXGWMAwjoVcqlXkiioUcJl0I8dZ13ZdKkfshwQEgVqlU5nUimkNna4SZl890KyKaEwAOe3gzOxTMvAJgrwfge8y8QgCwtbV1qVar3SGiCQAXugz8h5m3dV1/Y5rmL+r19fwvlWwc/MiYpz4AAAAASUVORK5CYII=' }
     };
-
-    // Body element
-    var $body = $ic('body');
-    // Make sure nightmode is already set before we do all the checks (matter of speed)
-    if (opts.nightMode) {
-        $body.addClass('night');
-    }
 
     function replaceImg(img, revert) {
         $ic(img.identifier).each(function () {
@@ -181,15 +179,15 @@ function ic_FunctionWrapper() {
     function flipNightMode() {
         var keys = Object.keys(nightmode_img),
             i, img;
-        if (opts.nightMode) {
-            $body.addClass('night');
+        if (_this.opts.nightMode) {
+            $ic('html').addClass('night');
             // replace all img with the white base64 version
             for (i = 0; i < keys.length; i++) {
                 img = nightmode_img[keys[i]];
                 replaceImg(img);
             }
-        } else if (!opts.nightMode && $body.hasClass('night')) {
-            $body.removeClass('night');
+        } else if (!_this.opts.nightMode && $ic('html').hasClass('night')) {
+            $ic('html').removeClass('night');
             for (i = 0; i < keys.length; i++) {
                 img = nightmode_img[keys[i]];
                 replaceImg(img, true);
@@ -266,7 +264,7 @@ function ic_FunctionWrapper() {
     }
 
     // Load member on hover
-    if (opts.loadMemberOnHover){
+    if (this.opts.loadMemberOnHover){
         $body.on('mouseover', 'a', function(event) {
             ev = event;
             // Only set timer if it has a target link, matches a member and is not equal to current member
@@ -323,7 +321,7 @@ function ic_FunctionWrapper() {
     }
 
     function switchOpenInNew() {
-        if (opts.openInNew) {
+        if (_this.opts.openInNew) {
             $body.on('click', '.online_box a, .featured_box a, .interest_box a, a.username, .birthdays_box a', open_new);
             $body.on('click', '.activity_widget a.activity_pic, .activity_widget .activity_description a:first-child', open_new);
         } else {
@@ -336,16 +334,16 @@ function ic_FunctionWrapper() {
 
     function switchHideElements() {
 
-        if (opts.hideEmptyMatches && $ic('.potential_match').find('.match').length === 1 && $ic('.potential_match').find('.match').first().hasClass('match-last')) {
+        if (_this.opts.hideEmptyMatches && $ic('.potential_match').find('.match').length === 1 && $ic('.potential_match').find('.match').first().hasClass('match-last')) {
             console.log('[IC Enhancement Suite] :: No matches, hiding box');
             $ic('.potential_match').hide();
         } else {
             $ic('.potential_match').show();
         }
 
-        $ic('.nearby-block.question').css('display', (opts.hideQuestionBlock ? 'none' : 'block'));
-        $ic('.widget.tutorial-welcome').css('display', (opts.hideWelcomeForm ? 'none' : 'block'));
-        $ic('.widget.invite-form').css('display', (opts.hideInviteForm ? 'none' : 'block'));
+        $ic('.nearby-block.question').css('display', (_this.opts.hideQuestionBlock ? 'none' : 'block'));
+        $ic('.widget.tutorial-welcome').css('display', (_this.opts.hideWelcomeForm ? 'none' : 'block'));
+        $ic('.widget.invite-form').css('display', (_this.opts.hideInviteForm ? 'none' : 'block'));
     }
 
     switchHideElements();
@@ -369,10 +367,10 @@ function ic_FunctionWrapper() {
     var $enhDialog = $ic('<div id="enhancedialog" title="Enhancements" class="dialog tabs-dialog" />');
     function createEnhanceDialog() {
         var dialogContent =  '<div id="enhance_tabs" class="tabs-no-padding">\n';
-        for (var i = 0; i < optionLabels.length; i++) {
-            var opt = optionLabels[i];
+        for (var i = 0; i < _this.optionLabels.length; i++) {
+            var opt = _this.optionLabels[i];
             if (opt.enabled) {
-                dialogContent += '    <input type="checkbox" class="option_check" data-option="' + opt.optionKey + '" id="' + opt.identifier + '" name="' + opt.identifier + '" ' + (opts[opt.optionKey] ? 'checked="checked"' : '') + '>\n';
+                dialogContent += '    <input type="checkbox" class="option_check" data-option="' + opt.optionKey + '" id="' + opt.identifier + '" name="' + opt.identifier + '" ' + (_this.opts[opt.optionKey] ? 'checked="checked"' : '') + '>\n';
                 dialogContent += '    <label for="' + opt.identifier + '" class="optional">' + opt.label + '</label>\n';
                 dialogContent += '    <div class="clear"></div>\n';
             }
@@ -399,12 +397,12 @@ function ic_FunctionWrapper() {
     });
 
     function saveForm() {
-        opts = {};
+        _this.opts = {};
         $ic('.option_check').each(function () {
             var key = $ic(this).data('option');
-            opts[key] = $ic(this).is(':checked');
+            _this.opts[key] = $ic(this).is(':checked');
         });
-        saveSettings();
+        _this.saveSettings();
     }
 
     $body.on('click', '.option_check',function (){
@@ -478,8 +476,30 @@ function ic_FunctionWrapper() {
 
     // DEBUG
     win.console.log('[IC Enhancement Suite] :: Succesfully loaded Suite');
+
+};
+
+////////////////////////////////////////////////////////////////////////////////
+
+innerCircleEnhancementSuite = new ICES();
+
+innerCircleEnhancementSuite.loadSettings();
+innerCircleEnhancementSuite.appendCSS();
+
+//console.log ("==> Script start.", new Date() );
+
+// 1ST PART OF SCRIPT RUN GOES HERE.
+//console.log ("==> 1st part of script run.", new Date() );
+
+document.addEventListener ('DOMContentLoaded', DOM_ContentReady);
+//window.addEventListener ("load", pageFullyLoaded);
+
+function DOM_ContentReady () {
+    innerCircleEnhancementSuite.setup();
 }
 
-var ic_ScriptObject = document.createElement('script');
-ic_ScriptObject.textContent = '(' + ic_FunctionWrapper.toString() + ')();';
-document.body.appendChild(ic_ScriptObject);
+//function pageFullyLoaded () {
+//    console.log ("==> Page is fully loaded, including images.", new Date() );
+//}
+
+//console.log ("==> Script end.", new Date() );

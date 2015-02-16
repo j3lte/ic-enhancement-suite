@@ -29,3 +29,4 @@ build/Release
 node_modules
 
 local-test-script.user.js
+tmp

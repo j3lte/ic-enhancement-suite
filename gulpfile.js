@@ -3,11 +3,14 @@ var gulp = require('gulp'),
     stylish = require('jshint-stylish'),
     runSequence = require('run-sequence'),
     watch = require('gulp-watch'),
-    shell = require('gulp-shell');
+    shell = require('gulp-shell'),
+    uglify = require('gulp-uglify'),
+    concat = require('gulp-concat'),
+    clean = require('gulp-clean');
 
 var files = [
     //'**/*.js'
-    'innercircle-enhancement-suite.user.js'
+    'src/innercircle-enhancement-suite.user.js'
 ];
 
 gulp.task('lint', function () {
@@ -18,6 +21,21 @@ gulp.task('lint', function () {
 
 gulp.task('default', ['lint']);
 
+gulp.task('compress', function() {
+  gulp.src('src/innercircle-enhancement-suite.user.js')
+    .pipe(uglify())
+    .pipe(gulp.dest('tmp'))
+});
+
+gulp.task('concat', function() {
+  return gulp.src([
+      './src/version.js',
+      './tmp/innercircle-enhancement-suite.user.js'
+    ])
+    .pipe(concat('innercircle-enhancement-suite.user.js'))
+    .pipe(gulp.dest('./'));
+});
+
 gulp.task('watch', function() {
     gulp.watch(files, ['lint']);
 });
@@ -27,5 +45,5 @@ gulp.task('sign', shell.task([
 ]));
 
 gulp.task('pub', function(cb) {
-  runSequence('lint', 'sign', cb);
+  runSequence('lint', 'compress', 'concat', 'sign', cb);
 });

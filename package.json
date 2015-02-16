@@ -1,6 +1,6 @@
 {
   "name": "ic-enhancement-suite",
-  "version": "0.3.6",
+  "version": "0.3.8",
   "description": "",
   "scripts": {
     "test": "gulp test"
@@ -10,9 +10,12 @@
   "dependencies": {},
   "devDependencies": {
     "gulp": "~3.8.8",
+    "gulp-clean": "^0.3.1",
+    "gulp-concat": "^2.5.0",
     "gulp-jshint": "~1.8.4",
     "gulp-run-sequence": "^0.3.2",
     "gulp-shell": "^0.3.0",
+    "gulp-uglify": "^1.1.0",
     "gulp-util": "~3.0.1",
     "gulp-watch": "^4.1.1",
     "jshint-stylish": "~1.0.0",

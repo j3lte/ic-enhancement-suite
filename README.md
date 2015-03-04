@@ -19,17 +19,13 @@ The InnerCircle Enhancement Suite will add a link to the top bar called "Enhance
  * Remove the top question block
  * Hide the matches block when there are no matches to be found
  * Hide invite form
- * Hide welcome form
  * Open members in a new tab
- * Load members on hovering over the user-link
  * Night mode
  * Reverse image search the images of a member/gallery
- * Open the full image
-
-### Load on hover
-
-This is still in beta. Basically, your browser makes a request for this member and pops open a fixed widget at the top left of the screen, with the userinfo in it. This will still count as a view (the user will see you 'visited' their profile)
+ * Open the full image on gallery click
 
 ### Nightmode
 
-This is an enhancement for readability. It changes the colors
+![Nightmode](https://github.com/j3lte/ic-enhancement-suite/raw/master/screenshot.png)
+
+This is an enhancement for readability. It changes the colors so it is better readable in less light

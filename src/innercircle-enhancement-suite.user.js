@@ -9,9 +9,7 @@ function ICES () {
     this.defaults = {
         hideQuestionBlock : false,
         hideEmptyMatches : false,
-        hideWelcomeForm : false,
         hideInviteForm : false,
-        loadMemberOnHover : false,
         openInNew : false,
         nightMode : false
     };
@@ -19,9 +17,7 @@ function ICES () {
     this.optionLabels = [
         { identifier: 'option_hide_question', optionKey: 'hideQuestionBlock', label: 'Hide top question block (top middle)', enabled: true },
         { identifier: 'option_hide_empty', optionKey: 'hideEmptyMatches', label: 'Hide matches widget when there are no matches (right)', enabled: true },
-        { identifier: 'option_hide_welcome', optionKey: 'hideWelcomeForm', label:'Hide welcome form (top left) [inactive]', enabled: false },
         { identifier: 'option_hide_invite', optionKey: 'hideInviteForm', label: 'Hide invite form (right)', enabled: true },
-        { identifier: 'option_load_hover', optionKey: 'loadMemberOnHover', label: 'Load members on hover (beta)', enabled: false },
         { identifier: 'option_open_in_new', optionKey: 'openInNew', label: 'Open member links in a new window/tab', enabled: true },
         { identifier: 'option_night_mode', optionKey: 'nightMode', label: 'Night mode', enabled: true }
     ];
@@ -57,19 +53,12 @@ ICES.prototype.saveSettings = function (){
 ICES.prototype.appendCSS = function () {
     var css = [
         '/* ICES ENHANCEMENTS */',
-        '#userBox { width: 158px; z-index:10000; padding: 2px; border: 1px solid #0099B0;position: fixed;left: 10px;top: 111px;font-size: 10px;background: #fff; }',
-        '#userBox .profile_field { border: 0px solid #000; padding: 0px; line-height: 11px; clear: both; }',
-        '#userBox .job_title { clear: both; color: #666; padding-bottom: 0; font-size: 10px; line-height: 11px; white-space: nowrap; overflow: hidden; border-top: 1px solid #CCC; border-bottom: 1px solid #CCC; }',
-        '#userBox #user_photos { display: block; width: 158px; min-width: 1px; margin: 3px 0 3px 2px; }',
-        '#userBox .rsTmb { width: 50px; margin: 0 2px 2px 0; }',
-        '.close-user-box { cursor: pointer; }',
         '.google-link { position: absolute;background: rgba(255,255,255,0.3);left: 0;bottom: 0;width: 100%;text-align: center;color: #000;font-size: 10px;text-decoration: none; }',
         '#saveAndReloadOptions.disabled { opacity: 0.1; }',
         '.navigation a { padding: 8px 7px; }',
         '.navigation-icon img { margin-top: -4px; }',
-        '.header { border-top: 0px; }',
         '#enhance_tabs label { color:#FFF; }',
-        '.header .navigation a.ic_enhance_suite { padding: 0; margin-right: -9px; margin-left: 15px; }',
+        '.header a.ic_enhance_suite { font-weight: bold; padding: 0 17px; }',
         '.mutual_box a.fb, .path_user a.fb { color: #0000FF; }',
         '/* SCROLLBARS */',
         '::-webkit-scrollbar { width: 12px; }',
@@ -77,6 +66,7 @@ ICES.prototype.appendCSS = function () {
         '::-webkit-scrollbar-thumb { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
         '/* NIGHTMODE */',
         'html.night .white, html.night nav.canvas { background-color: #302E31; }',
+        'html.night .header { border-top-color: #302E31; }',
         'html.night body, .night .widget.white { background-color: #302E31; color: #fff; }',
         'html.night h1 { background-image: url("/images/h1_white.png"); }',
         'html.night h1, html.night h1 a, html.night .job_title, html.night .profile_field b { color:#fff; }',
@@ -198,114 +188,9 @@ ICES.prototype.setup = function () {
 
     flipNightMode();
 
-    // $membox is used for the downloaded content
-    var $memBox = $ic('<div />');
-
-    // Userbox is the box that is shown when a member is loaded
-    var $userBox = $ic('<div id="userBox" style="display: none;" />');
-    $body.append($userBox);
-
-    // Loader that is shown at the bottom right of the window
-    var $loader = $ic('<div id="loader" style="opacity: 0.6; z-index: 10000; display: none; position: fixed; right: 20px;bottom: 0; width: 240px; height: 16px; background: #0099B0;text-align: center; color: #FFF; padding: 5px 0;"></div>');
-    $body.append($loader);
-
-    function loader(message) {
-        if (message) {
-            $loader.text(message);
-            if ($loader.is(':hidden')) {
-                $loader.show();
-            }
-        } else {
-            $loader.hide();
-        }
-    }
-
     // Regex to determine whether a link contains a member link
-    var memLinkRegEx = /(http|https):\/\/www\.theinnercircle\.co\/member\/\d+/;
-    var timer, ev, link, userBoxes  = {};
-
-    // Loads the member page
-    function loadMember(link) {
-        loader('Loading member...');
-        $memBox.load(link, function(){
-            //callback after your data is in loaded into body.
-            var userName = $memBox.find('.username').parent();
-            var jobTitle = $memBox.find('.job_title');
-            var thumbs = $memBox.find('#user_photos');
-            var profileFields = $memBox.find('.profile_field');
-
-            $userBox.html('');
-            $userBox.append(userName);
-            $userBox.append(jobTitle);
-            if (thumbs.find('.rsImg').length) {
-
-                var h = Math.round(thumbs.find('.rsImg').length / 3) * 50;
-                thumbs.css('height', h + 'px');
-
-                thumbs.find('.rsImg').each(function (){
-                    if ($ic(this).data('rsbigimg')) {
-                        $ic(this).attr('href', $ic(this).data('rsbigimg'));
-                    }
-                    $ic(this).attr('target','_blank');
-                });
-
-                $userBox.append(thumbs);
-            }
-            $userBox.append(profileFields);
-            $userBox.append('<span class="ui-button-icon-primary ui-icon ui-icon-closethick close-user-box" style="position: absolute; top: 0; right: 0;"></span>');
-
-            userBoxes[link] = $userBox.html();
-            link = null;
-
-            loader();
-            $userBox.fadeIn(500);
-
-            win.console.log('[IC Enhancement Suite] :: User shown');
-        });
-    }
-
-    // Load member on hover
-    if (this.opts.loadMemberOnHover){
-        $body.on('mouseover', 'a', function(event) {
-            ev = event;
-            // Only set timer if it has a target link, matches a member and is not equal to current member
-            if (ev.currentTarget && ev.currentTarget.href && memLinkRegEx.test(ev.currentTarget.href) && (ev.currentTarget.href !== win.location.href) && ev.currentTarget.href.indexOf('#') === -1) {
-
-                link = ev.currentTarget.href;
-
-                if (typeof(userBoxes[link]) !== 'undefined' && userBoxes[link] !== null) {
-
-                    $userBox.html(userBoxes[link]);
-                    $userBox.show();
-
-                } else {
-                    loader('Loading member in 7s...');
-                    timer = win.setTimeout(function() {
-                        // Execute when timer reached
-                        win.console.log('[IC Enhancement Suite] :: Loading user : ' + link);
-                        loadMember(link);
-
-                        timer = null;
-                        ev = null;
-
-                    }, 7000);
-
-                }
-            }
-        });
-
-        $body.on('mouseout', 'a', function() {
-            if (timer) {
-                win.clearTimeout(timer);
-                ev = null;
-            }
-            loader();
-        });
-
-        // Userbox clicks
-        $body.on('click', '#userBox .username', open_new);
-        $body.on('click','.close-user-box', function() { $userBox.hide(); });
-    }
+    //var memLinkRegEx = /(http|https):\/\/www\.theinnercircle\.co\/member\/\d+/;
+    var ev;
 
     function open_new() {
         $ic(this).target = '_blank';
@@ -313,10 +198,6 @@ ICES.prototype.setup = function () {
             win.open($ic(this).prop('href'));
         } else if ($ic(this).prop('src')) {
             win.open($ic(this).prop('src'));
-        }
-        if (timer) {
-            win.clearTimeout(timer);
-            ev = null;
         }
         return false;
     }
@@ -343,7 +224,7 @@ ICES.prototype.setup = function () {
         }
 
         $ic('.nearby-block.question').css('display', (_this.opts.hideQuestionBlock ? 'none' : 'block'));
-        $ic('.widget.tutorial-welcome').css('display', (_this.opts.hideWelcomeForm ? 'none' : 'block'));
+        /*$ic('.widget.tutorial-welcome').css('display', (_this.opts.hideWelcomeForm ? 'none' : 'block'));*/
         $ic('.widget.invite-form').css('display', (_this.opts.hideInviteForm ? 'none' : 'block'));
     }
 
@@ -363,7 +244,7 @@ ICES.prototype.setup = function () {
     });
 
     // Enhance Dialog (Options screen)
-    $ic('.header .grid_12 ul').append('<li class="has_underline"><a href="#" class="ic_enhance_suite navigation-icon navigation_tip">Enhance</a></li>');
+    $ic('.header .grid_12 > nav > ul').find('li.has-underline').last().after('<li class="has-underline"><a href="#" class="ic_enhance_suite navigation-icon navigation_tip">+</a></li>');
 
     var $enhDialog = $ic('<div id="enhancedialog" title="Enhancements" class="dialog tabs-dialog" />');
     function createEnhanceDialog() {
@@ -474,6 +355,17 @@ ICES.prototype.setup = function () {
     if ($mutual) {
         $mutual.find('td img').each(addGraphLink);
     }
+
+    // Improve search by removing city selection
+    $ic('.search-widget').append('<input type="hidden" name="city_id" id="city_id" value="0">');
+    $ic('.search-widget').append('<input type="hidden" name="search" id="search" value="Search">');
+
+    // Hide canvas on wrapper click
+    $body.on('click', '.wrapper > .container_16',function (){
+        if ($body.hasClass('canvas-open')) {
+            $body.removeClass('canvas-open');
+        }
+    });
 
     // DEBUG
     win.console.log('[IC Enhancement Suite] :: Succesfully loaded Suite');

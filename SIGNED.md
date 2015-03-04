@@ -3,13 +3,13 @@
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQEcBAABAgAGBQJU4ZMxAAoJEFejYcLP1d0iB+kH/iH8p1ItZMuDwqtY4l+Bh8y9
-XzN43uONH2VaeRQkdWFj+AKQK1KXLGi0GfqlP9tzM1wF3ikq3gise90BVvdOQHXt
-P6unVNnFhprcrS35y2tJ8AKcFTLnN1nejG9TZbuxMbSyCX/ZeepoHqDwZLBKjG5x
-umjqUA6A5Thgsqeq7G0Cs1n8ROPVxE4vkKcZHEYSeA39PUEcKm3vD2OT1tnpAzf4
-OlbB/Gikm/PvgepYUl500A3a59lEPPxCR6RYcSbuS0qwoOLjn2rFtxaHsDUgrH7q
-NAnbSCYBBHKT7C8WFn6usMIEOGddDCVFH2QG5+3cz+8EEGyojU1CvB0PDHoIBp8=
-=xh9/
+iQEcBAABAgAGBQJU9uMBAAoJEFejYcLP1d0iwFYH/1BqcGggWvHoUdB8FiVapEKs
+5M3JB7wewQZwAc33MoecLy98mRULoJuzXukeRCruZmPCMfWaxL2TO4NRSGAKu0tm
+MPcQjQ4EGXEDLbgjJbNPGTIW0IZqPZssSyTb3CxGTDXhaDcXJ+4tY/PZJ0iqPmMV
+dXkxHNQzslAPxUkeWNNrAiu7T7THFno85e7AInTbAXBAJxqfGAC96jcVUCYLQGvE
+CJre9gfziczjBgun2DnEXnHQ/U1hmPX+l9MFYOlMuuSJOSZY3Kbb9/z5lzoaeXQf
+ZCe4Bear2LpWmdxF1mffCyPHfykFWCk0duMl95xLt+47ZDn5R4pdygkShiB8TJU=
+=SRT1
 -----END PGP SIGNATURE-----
 
 ```
@@ -29,13 +29,13 @@ size   exec  file                                       contents
 492            .jshintrc                                484cc544068293768addba39a93020912d24e80645d21824b6b2df7c11bdca90                                                                 
 1172           gulpfile.js                              183f632432b077966f5f381e13a32dc9c705381754535b3a9a6fd6807ddc9244                                                                 
 1552           ic_plus.png                              871b3cd93e15ea2faaf4fefad583b51234d71257a0555126455e46e1d686e106|11c336241befe6205f19bb9864fe33ec4e9a867447a53f9fc0afe4203268441c
-25124          innercircle-enhancement-suite.user.js    45945444d85d67c3ec1fd714c263ebc15c6fc0569ae6ba21535dde2b4a11b845                                                                 
+23136          innercircle-enhancement-suite.user.js    259d2fdb37e737d2ad5a5caf4359239df1bd6366ee6e8f12af47e69298c61a0d                                                                 
 1083           LICENSE                                  3175819a8e691b22f841cb22bf1d2f7bb38feac56b38d7df9eab86f12ecee359                                                                 
 528            package.json                             66746ec2d0bc390875e5040d09c1a58a6518c22179a9e22855d1105148a88da4                                                                 
 1484           README.md                                f58047a8294cd53d0aebeb7fd6cd30dde221cba43ddb526163aa26c31b2cbf55                                                                 
                src/                                                                                                                                                                      
-32171            innercircle-enhancement-suite.user.js  a2bb2953f773875b8ea0a25416bec1837d91c74cec2e91f38118a07e8262c284                                                                 
-832              version.js                             9b722f096ae27f6dd4ca7dfa3e88587c8bbfa22a4d2130a160b1331f3ed8ad53                                                                 
+30193            innercircle-enhancement-suite.user.js  0f058e51d0a8ec276733f664143b52d32a62b4bdeace4c1124d865fa486d60e4                                                                 
+832              version.js                             e30fc0b99d0ce15b50fc68c68d93dd33915cb304742e2e9cedf7bd9eaf5bc5d3                                                                 
 ```
 
 #### Ignore

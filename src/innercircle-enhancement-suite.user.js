@@ -19,7 +19,7 @@ function ICES () {
     this.optionLabels = [
         { identifier: 'option_hide_question', optionKey: 'hideQuestionBlock', label: 'Hide top question block (top middle)', enabled: true },
         { identifier: 'option_hide_empty', optionKey: 'hideEmptyMatches', label: 'Hide matches widget when there are no matches (right)', enabled: true },
-        { identifier: 'option_hide_welcome', optionKey: 'hideWelcomeForm', label:'Hide welcome form (top left)', enabled: true },
+        { identifier: 'option_hide_welcome', optionKey: 'hideWelcomeForm', label:'Hide welcome form (top left) [inactive]', enabled: false },
         { identifier: 'option_hide_invite', optionKey: 'hideInviteForm', label: 'Hide invite form (right)', enabled: true },
         { identifier: 'option_load_hover', optionKey: 'loadMemberOnHover', label: 'Load members on hover (beta)', enabled: false },
         { identifier: 'option_open_in_new', optionKey: 'openInNew', label: 'Open member links in a new window/tab', enabled: true },
@@ -67,6 +67,7 @@ ICES.prototype.appendCSS = function () {
         '#saveAndReloadOptions.disabled { opacity: 0.1; }',
         '.navigation a { padding: 8px 7px; }',
         '.navigation-icon img { margin-top: -4px; }',
+        '.header { border-top: 0px; }',
         '#enhance_tabs label { color:#FFF; }',
         '.header .navigation a.ic_enhance_suite { padding: 0; margin-right: -9px; margin-left: 15px; }',
         '.mutual_box a.fb, .path_user a.fb { color: #0000FF; }',
@@ -75,7 +76,7 @@ ICES.prototype.appendCSS = function () {
         '::-webkit-scrollbar-track { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
         '::-webkit-scrollbar-thumb { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
         '/* NIGHTMODE */',
-        'html.night .white { background-color: #302E31; }',
+        'html.night .white, html.night nav.canvas { background-color: #302E31; }',
         'html.night body, .night .widget.white { background-color: #302E31; color: #fff; }',
         'html.night h1 { background-image: url("/images/h1_white.png"); }',
         'html.night h1, html.night h1 a, html.night .job_title, html.night .profile_field b { color:#fff; }',
@@ -91,7 +92,7 @@ ICES.prototype.appendCSS = function () {
         'html.night .free_action { color: #151415; }',
         'html.night .answer-label, html.night #answers-element label { background-color: #302E31; color: #FFF; }',
         'html.night #answers-element label.answer-common { background-color: #0099B0; }',
-        'html.night .message, html.night .message_send, html.night .message_list, html.night .ui-dialog .ui-dialog-content, html.night .ui-tabs .ui-tabs-panel { background-color: #242124; }',
+        'html.night .message, html.night .message_send, html.night .message_list, html.night .ui-dialog .ui-dialog-content, html.night .ui-tabs .ui-tabs-panel, html.night .ui-dialog { background-color: #242124; border-color: #242124; }',
         'html.night .panel-box { background-color: #302E31; }',
         'html.night .double_user, html.night .single_user { background-color: #242124; }',
         'html.night .ui-tabs .ui-tabs-panel, html.night .ui-tabs .ui-widget-header { background-color: #302E31; }',
@@ -362,7 +363,7 @@ ICES.prototype.setup = function () {
     });
 
     // Enhance Dialog (Options screen)
-    $ic('.navigation').append('<a href="#" class="ic_enhance_suite navigation-icon navigation_tip" title="InnerCircle Enhancement Suite"><img src="data:image/png;base64,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"/></a>');
+    $ic('.header .grid_12 ul').append('<li class="has_underline"><a href="#" class="ic_enhance_suite navigation-icon navigation_tip">Enhance</a></li>');
 
     var $enhDialog = $ic('<div id="enhancedialog" title="Enhancements" class="dialog tabs-dialog" />');
     function createEnhanceDialog() {

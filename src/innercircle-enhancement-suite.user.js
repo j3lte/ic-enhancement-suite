@@ -53,11 +53,17 @@ ICES.prototype.saveSettings = function (){
 ICES.prototype.appendCSS = function () {
     var css = [
         '/* ICES ENHANCEMENTS */',
-        '.google-link { position: absolute;background: rgba(255,255,255,0.3);left: 0;bottom: 0;width: 100%;text-align: center;color: #000;font-size: 10px;text-decoration: none; }',
+        '.tutorial-welcome { padding-bottom: 10px; }',
+        '.nearby-block { margin-top: -10px; }',
+        '.fancybox-nav { width: 20%; }',
+        '.google-link, .upload-date { position: absolute; height: 15px; line-height: 15px; left: 0;width: 100%;text-align: center;color: #000;font-size: 11px;text-decoration: none; }',
+        '.google-link { bottom: -14px; }',
+        '.upload-date { top: -15px; }',
         '#saveAndReloadOptions.disabled { opacity: 0.1; }',
         '.navigation a { padding: 8px 7px; }',
         '.navigation-icon img { margin-top: -4px; }',
-        '#enhance_tabs label { color:#FFF; }',
+        '.tabs-dialog .ui-tabs-panel.enhance_tab { padding:10px 0 10px 10px; }',
+        '#enhance_credits p { margin-bottom: 10px; }',
         '.header a.ic_enhance_suite { font-weight: bold; padding: 0 17px; }',
         '.mutual_box a.fb, .path_user a.fb { color: #0000FF; }',
         '.online_box a, .birthdays_box a, .path_user { position: relative; }',
@@ -69,9 +75,11 @@ ICES.prototype.appendCSS = function () {
         '::-webkit-scrollbar-thumb { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
         '/* NIGHTMODE */',
         'html.night .white, html.night nav.canvas { background-color: #302E31; }',
+        'html.night .google-link, html.night .upload-date { color: #FFF; }',
         'html.night .header { border-top-color: #302E31; }',
         'html.night body, .night .widget.white { background-color: #302E31; color: #fff; }',
         'html.night h1 { background-image: url("/images/h1_white.png"); }',
+        'html.night .ui-state-default .ui-icon { background-image: url(/css/ui/images/ui-icons_ffffff_256x240.png); }',
         'html.night h1, html.night h1 a, html.night .job_title, html.night .profile_field b { color:#fff; }',
         'html.night .rsDefault, html.night .rsDefault .rsOverflow, html.night .rsDefault .rsSlide, html.night .rsDefault .rsVideoFrameHolder, html.night .rsDefault .rsThumbs { background-color: #323232; }',
         'html.night .member_event_date, html.night .event_date, html.night .invites_count, html.night .my_trip_date { background-color: #0099B0; }',
@@ -142,6 +150,11 @@ ICES.prototype.setup = function () {
         this.win.console = {
             log : function(){}
         };
+    }
+
+    if (!$ic || !$ic.fn.jquery) {
+      win.console.log('[IC Enhancement Suite] :: Terminated because no jQuery is loaded');
+      return;
     }
 
     // body element
@@ -239,19 +252,27 @@ ICES.prototype.setup = function () {
     // Add 'Search with google' link to popup images
     $body.on('mouseover', '.fancybox-image', function(event) {
         ev = event;
+        var imgRegExp = /^.*\/(\d+)_(\d+)\..*/;
         if ($ic(this).attr('src') && $ic(this).parent().find('.google-link').length === 0) {
             var href = $ic(this).attr('src');
-            var link = $ic('<a class="google-link" href="http://www.google.com/searchbyimage?image_url=' + encodeURIComponent(href) +'" target="_blank">Search with google</a>');
-            $ic(this).parent().append(link);
+            if (href.match(imgRegExp)) {
+              var epochNum = href.split(imgRegExp)[1];
+              var uploadDate = new Date(epochNum * 1000);
+              var $date = $ic('<span class="upload-date">Uploaded at: ' + uploadDate.toLocaleString() + '</span>');
+              $ic(this).parent().append($date);
+            }
+            var $link = $ic('<a class="google-link" href="http://www.google.com/searchbyimage?image_url=' + encodeURIComponent(href) +'" target="_blank">Search with google</a>');
+            $ic(this).parent().append($link);
         }
     });
 
     // Enhance Dialog (Options screen)
-    $ic('.header .grid_12 > nav > ul').find('li.has-underline').last().after('<li class="has-underline"><a href="#" class="ic_enhance_suite navigation-icon navigation_tip">+</a></li>');
+    $ic('.header .grid_12 > nav > ul').find('li.has-underline').last().after('<li class="has-underline"><a href="#" class="ic_enhance_suite navigation-icon navigation_tip"><img src="data:image/png;base64,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" /></a></li>');
 
     var $enhDialog = $ic('<div id="enhancedialog" title="Enhancements" class="dialog tabs-dialog" />');
     function createEnhanceDialog() {
-        var dialogContent =  '<div id="enhance_tabs" class="tabs-no-padding">\n';
+        var dialogContent = '<div class="enhtabs"><ul><li><a href="#enhance_tabs">Enhancements</a></li><li><a href="#enhance_credits">Credits</a></li></ul>\n';
+        dialogContent += '<div id="enhance_tabs" class="enhance_tab">\n';
         for (var i = 0; i < _this.optionLabels.length; i++) {
             var opt = _this.optionLabels[i];
             if (opt.enabled) {
@@ -263,6 +284,9 @@ ICES.prototype.setup = function () {
         // SUBMIT
         dialogContent += '    <dt></dt>\n';
         dialogContent += '    <a href="#" id="saveAndReloadOptions" class="button">Close</a>\n';
+        dialogContent += '</div>\n';
+        dialogContent += '<div id="enhance_credits" class="enhance_tab">\n';
+        dialogContent += '<p>Created by <a href="http://jeltelagendijk.nl" target="_blank">Jelte Lagendijk</a></p><p><strong>Disclaimer:</strong> InnerCircle Enhancement Suite is Not Affiliated with The Inner Circle or Circle Imperium B.V. (company behind The Inner Circle) in any way.</p></div>'
         dialogContent += '</div>';
         $enhDialog.html(dialogContent);
     }
@@ -272,7 +296,10 @@ ICES.prototype.setup = function () {
         closeOnEscape: true,
         modal: true,
         autoOpen: false,
-        width: 400
+        width: 400,
+        open: function () {
+          $ic('#enhancedialog .enhtabs').tabs();
+        }
     });
 
     $ic('a.ic_enhance_suite').on('click', function (e){

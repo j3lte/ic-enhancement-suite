@@ -60,6 +60,9 @@ ICES.prototype.appendCSS = function () {
         '#enhance_tabs label { color:#FFF; }',
         '.header a.ic_enhance_suite { font-weight: bold; padding: 0 17px; }',
         '.mutual_box a.fb, .path_user a.fb { color: #0000FF; }',
+        '.online_box a, .birthdays_box a, .path_user { position: relative; }',
+        '.age_count { top: 28px; right: -3px; font-size: 9px; height: 14px; line-height: 14px; padding: 0 5px; }',
+        '.fb_flair { top: -7px; background: #3a5795; font-size: 10px; padding: 0 4px; }',
         '/* SCROLLBARS */',
         '::-webkit-scrollbar { width: 12px; }',
         '::-webkit-scrollbar-track { border-radius: 1px; -webkit-box-shadow: inset 0 0 4px rgba(0,0,0,0.5); }',
@@ -338,6 +341,7 @@ ICES.prototype.setup = function () {
         var match = $img.prop('src').match(graphRexExp);
         if (match) {
             var $div = $img.parent().find('div').first();
+            $img.parent().append('<span class="count fb_flair">FB</span>');
             var txt = $div.text();
             $div.html('<a class="fb" href="https://www.facebook.com/profile.php?id=' + match[2] + '" target="_blank">' + txt + '</a>');
         }
@@ -366,6 +370,31 @@ ICES.prototype.setup = function () {
             $body.removeClass('canvas-open');
         }
     });
+
+    var addAgeFlairs = function(box) {
+      var $box = $ic(box);
+      var titleRegExp = /^.*.\((\d+)\)/;
+      $box.find('a').each(function () {
+        var $link = $ic(this);
+        var age = '?';
+        if ($link.find('.count').length === 0 && $link.attr('title') && $link.attr('title').match(titleRegExp)) {
+          age = parseInt($link.attr('title').split(titleRegExp)[1], 10);
+          $link.append('<span class="count age_count">' + age + '</span>');
+        }
+      });
+    };
+
+    addAgeFlairs('.birthdays_box');
+    addAgeFlairs('.online_box');
+
+    // Socket magic for adding age flairs
+    if (socket) {
+      socket.on('activity', function(data) {
+        if (data.type && data.type === 'online') {
+          addAgeFlairs('.online_box');
+        }
+      });
+    }
 
     // DEBUG
     win.console.log('[IC Enhancement Suite] :: Succesfully loaded Suite');

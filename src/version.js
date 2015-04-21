@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         InnerCircle Enhancement Suite
 // @namespace    https://github.com/j3lte/ic-enhancement-suite
-// @version      0.4.2
+// @version      0.4.3
 // @description  Adds functionalities to InnerCircle
 // @author       j3lte
 // @updateURL    https://github.com/j3lte/ic-enhancement-suite/raw/master/innercircle-enhancement-suite.user.js

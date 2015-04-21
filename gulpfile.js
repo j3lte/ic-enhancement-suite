@@ -27,7 +27,7 @@ gulp.task('compress', function() {
     .pipe(gulp.dest('tmp'))
 });
 
-gulp.task('concat', function() {
+gulp.task('concat', ['compress'], function() {
   return gulp.src([
       './src/version.js',
       './tmp/innercircle-enhancement-suite.user.js'
@@ -45,5 +45,5 @@ gulp.task('sign', shell.task([
 ]));
 
 gulp.task('pub', function(cb) {
-  runSequence('lint', 'compress', 'concat', 'sign', cb);
+  runSequence('lint', 'concat', 'sign', cb);
 });

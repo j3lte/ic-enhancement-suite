@@ -17,7 +17,8 @@
     "GM_addStyle",
     "PRO_addStyle",
     "addStyle",
-    "innerCircleEnhancementSuite"
+    "innerCircleEnhancementSuite",
+    "socket"
   ],
   "-W020": false,
 
